@@ -19,7 +19,7 @@ const CartPage = () => {
           Your cart is empty 🛍️
         </h2>
         <Link
-          to="/products"
+          to="/"
           className="inline-block bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition-colors"
         >
           Continue Shopping
