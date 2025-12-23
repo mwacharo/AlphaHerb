@@ -25,9 +25,9 @@ const Footer = () => {
                     <div>
                         <div className="flex items-center space-x-2 mb-4">
                             <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold">MK0</span>
+                                <span className="text-white font-bold">AHB</span>
                             </div>
-                            <span className="text-xl font-bold">Mwamko Herbs</span>
+                            <span className="text-xl font-bold">alphaherb Herbs</span>
                         </div>
                         <p className="text-gray-400 text-sm">
                             Premium quality syrups crafted with care for your beverages and culinary creations.
@@ -50,12 +50,13 @@ const Footer = () => {
                         <ul className="space-y-3 text-gray-400 text-sm">
                             <li className="flex items-center space-x-2">
                                 <Phone size={16} className="text-amber-500" />
-                                <span>+254782943719</span>
+                                <span>+254110771426</span>
                             </li>
                             <li className="flex items-center space-x-2">
                                 <Mail size={16} className="text-amber-500" />
-                                {/* <span>sales@mwamkoherbscom</span> */}
-                                <span>mwamkoherbs@gmail.com</span>
+                                {/* <span>sales@alphaherbherbscom</span> */}
+                                <span>sales.alphaherb@gmail.com
+</span>
 
                             </li>
                             <li className="flex items-center space-x-2">
@@ -82,7 +83,7 @@ const Footer = () => {
                 </div>
 
                 <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-                    <p>&copy; 2025 MWAMKO Herbs. All rights reserved.</p>
+                    <p>&copy; 2025 AlphaHerb Herbs. All rights reserved.</p>
                 </div>
             </div>
         </footer>
@@ -399,7 +400,7 @@ const ContactPage = () => {
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12">
                     <h1 className="text-5xl font-bold mb-4 text-gray-800">Contact Us</h1>
-                    <p className="text-xl text-gray-600">Get in touch with the Mwamkoherbs team</p>
+                    <p className="text-xl text-gray-600">Get in touch with the AlphaHerb team</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
@@ -475,7 +476,8 @@ const ContactPage = () => {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-gray-800 mb-1">Email</h3>
-                                        <p className="text-gray-600">mwamkoherbs@gmail.com</p>
+                                        <p className="text-gray-600">sales.alphaherb@gmail.com
+</p>
                                     </div>
                                 </div>
 
@@ -485,7 +487,7 @@ const ContactPage = () => {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-gray-800 mb-1">Website</h3>
-                                        <p className="text-gray-600">mwamkoherbs.com</p>
+                                        <p className="text-gray-600">https://alphaherb.vercel.app</p>
                                     </div>
                                 </div>
                             </div>
@@ -552,8 +554,8 @@ const App = () => {
 
               {/* WhatsApp Floating Button */}
             <FloatingWhatsApp
-                phoneNumber="254782943719"
-                accountName="Mwamko Herbs"
+                phoneNumber="254110771426"
+                accountName="AlphaHerb"
                 chatMessage="Hello 👋 How can we help you today?"
                 statusMessage="Typically replies within 3 minutes "
             />
@@ -565,7 +567,7 @@ const App = () => {
                                 <span className="text-white font-bold text-xl">SM</span>
                             </div>
                             <div>
-                                <h1 className="text-2xl font-bold text-gray-800">Mwamko Herbs</h1>
+                                <h1 className="text-2xl font-bold text-gray-800">AlphaHerbs</h1>
                                 <p className="text-xs text-amber-600">Premium Syrups & Herbs</p>
                             </div>
                         </div>
