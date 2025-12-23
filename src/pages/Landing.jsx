@@ -27,7 +27,7 @@ const Footer = () => {
                             <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center">
                                 <span className="text-white font-bold">AHB</span>
                             </div>
-                            <span className="text-xl font-bold">alphaherb Herbs</span>
+                            <span className="text-xl font-bold">AlphaHerb</span>
                         </div>
                         <p className="text-gray-400 text-sm">
                             Premium quality syrups crafted with care for your beverages and culinary creations.
