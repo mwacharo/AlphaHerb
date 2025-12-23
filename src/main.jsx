@@ -46,7 +46,7 @@ createRoot(document.getElementById('root')).render(
 
 
         {/* Pixel tracker */}
-        <PixelTracker />
+        {/* <PixelTracker /> */}
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/checkout" element={<Checkout />} />
