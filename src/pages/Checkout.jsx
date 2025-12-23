@@ -4,6 +4,10 @@ import { MapPin, Phone, Mail, ShoppingBag, User, Home } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { createOrder } from '../api/orders';
 
+import ReactPixel from 'react-facebook-pixel';
+import { useEffect } from 'react';
+
+
 const CheckoutPage = () => {
     const navigate = useNavigate();
     const { cartItems, getCartTotal, clearCart, getCartMetadata } = useCart();
@@ -118,6 +122,19 @@ const CheckoutPage = () => {
             setLoading(false);
         }
     };
+
+
+
+    useEffect(() => {
+    if (cartItems.length > 0) {
+        ReactPixel.track('InitiateCheckout', {
+            value: getCartTotal(),
+            currency: 'KES',
+            num_items: cartItems.length,
+        });
+    }
+}, []);
+
 
     if (cartItems.length === 0 && !success) {
         return (

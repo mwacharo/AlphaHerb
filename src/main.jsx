@@ -11,6 +11,27 @@ import Landing from "./pages/Landing.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import CartPage from './pages/CartPage.jsx';
 
+// 
+// import ReactPixel from 'react-facebook-pixel'
+import { useEffect } from 'react';
+
+
+
+// 🔹 Initialize Pixel (only once)
+// ReactPixel.init('YOUR_META_PIXEL_ID')
+
+// 🔹 Track page views on route change
+// function PixelTracker() {
+//   // const location = useLocation()
+
+//   useEffect(() => {
+//     ReactPixel.pageView()
+//   }, [location])
+
+//   return null
+// }
+
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     {/* <App /> */}
@@ -21,6 +42,11 @@ createRoot(document.getElementById('root')).render(
     
 
         <BrowserRouter>
+
+
+
+        {/* Pixel tracker */}
+        <PixelTracker />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/checkout" element={<Checkout />} />
