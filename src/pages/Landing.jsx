@@ -72,6 +72,9 @@ const Footer = () => {
                             <button className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-600 transition-colors">
                                 <Facebook size={20} />
                             </button>
+                            {/* <button className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-600 transition-colors">
+                                <TikTok size={20} />
+                            </button> */}
                             <button className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-600 transition-colors">
                                 <Twitter size={20} />
                             </button>
@@ -305,13 +308,28 @@ const ProductsPage = () => {
                                 key={product.id}
                                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow"
                             >
-                                <div className="h-48 flex items-center justify-center bg-gray-100">
+                                {/* <div className="h-48 flex items-center justify-center bg-gray-100">
                                     <img
                                         src={imageUrl}
                                         alt={product.product_name}
                                         className="h-full w-full object-cover"
                                     />
-                                </div>
+                                </div> */}
+
+
+
+                                <div className="relative aspect-square bg-white p-10 flex items-center justify-center overflow-hidden">
+  
+  <div className="absolute inset-0 bg-gradient-radial from-gray-100 via-white to-white opacity-70"></div>
+
+  <img
+    src={imageUrl}
+    alt={product.product_name}
+    loading="lazy"
+    className="relative max-h-full object-contain transition-all duration-700 group-hover:scale-105"
+  />
+
+</div>
 
                                 <div className="p-6">
                                     <h3 className="text-xl font-bold mb-2 text-gray-800">
