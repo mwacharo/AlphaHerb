@@ -10,6 +10,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Landing from "./pages/Landing.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import CartPage from './pages/CartPage.jsx';
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
+import TermsConditions from './pages/TermsConditions.jsx';
 
 // 
 // import ReactPixel from 'react-facebook-pixel'
@@ -51,8 +53,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Landing />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/cart" element={<CartPage />} />
-
-        
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
       </Routes>
     </BrowserRouter>
         </CartProvider>

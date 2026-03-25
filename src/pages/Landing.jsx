@@ -38,6 +38,9 @@ const Footer = () => {
                         <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
                         <ul className="space-y-2 text-gray-400 text-sm">
                             <li><button className="hover:text-amber-500 transition-colors">Products</button></li>
+                            {/* add privacy policy  */}
+                            <li><Link to="/privacy-policy" className="hover:text-amber-500 transition-colors">Privacy Policy</Link></li>
+                            <li><Link to="/terms-conditions" className="hover:text-amber-500 transition-colors">Terms & Conditions</Link></li>
 
                             {/* <li><button className="hover:text-amber-500 transition-colors">Home</button></li>
                             <li><button className="hover:text-amber-500 transition-colors">About Us</button></li>
