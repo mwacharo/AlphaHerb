@@ -1048,10 +1048,10 @@ const ProblemSection = ({ data }) => (
   </section>
 );
 
-const BenefitsSection = ({ data }) => (
+const BenefitsSection = ({ data,product }) => (
   <section className="section benefits">
     <div className="section-inner">
-      <h2 className="section-title">What <span className="gold-text">Strong Man</span> Does For You</h2>
+      <h2 className="section-title">What <span className="gold-text">{product?.name}</span> Does For You</h2>
       <div className="gold-divider" />
       <div className="benefits-grid">
         {data?.items?.map((item, i) => (
@@ -1066,10 +1066,10 @@ const BenefitsSection = ({ data }) => (
   </section>
 );
 
-const WhyChooseSection = ({ data }) => (
+const WhyChooseSection = ({ data, product }) => (
   <section className="section why-choose">
     <div className="section-inner">
-      <h2 className="section-title">Why <span className="gold-text">Strong Man</span> Over Everything Else?</h2>
+      <h2 className="section-title">Why <span className="gold-text">{product?.name}</span> Over Everything Else?</h2>
       <div className="gold-divider" />
       <div className="why-list">
         {data?.items?.map((item, i) => (
@@ -1108,7 +1108,7 @@ const ReviewsSection = ({ reviews }) => {
   return (
     <section className="section reviews">
       <div className="section-inner">
-        <h2 className="section-title">What <span className="gold-text">Real Men</span> Are Saying</h2>
+        <h2 className="section-title">What <span className="gold-text">Customers</span> Are Saying</h2>
         <div className="gold-divider" />
         <div className="reviews-grid">
           {reviews.map(r => (
