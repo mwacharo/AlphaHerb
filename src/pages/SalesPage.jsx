@@ -1421,7 +1421,7 @@ const SalesPage = () => {
         <footer className="footer">
           <div className="footer-logo">{product.name}</div>
           <p className="footer-text">
-            © {new Date().getFullYear()} Strong Man. All rights reserved.<br />
+            © {new Date().getFullYear()} AlphaHerb. All rights reserved.<br />
             Results may vary. This product is not intended to diagnose, treat, cure, or prevent any disease.<br />
             Free delivery within Kenya. Pay on delivery available.
           </p>
