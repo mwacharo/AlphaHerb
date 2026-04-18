@@ -1020,10 +1020,10 @@ const ProofBar = () => (
   </div>
 );
 
-const AboutSection = ({ data }) => (
+const AboutSection = ({ data, product }) => (
   <section className="section about">
     <div className="section-inner">
-      <h2 className="section-title">What Is <span className="gold-text">{product.name}</span></h2>
+      <h2 className="section-title">What Is <span className="gold-text">{product?.name}</span></h2>
       <div className="gold-divider" />
       <p className="about-body">{data?.body}</p>
     </div>
@@ -1369,7 +1369,7 @@ const SalesPage = () => {
     const key = section.id;
     switch (section.type) {
       case "hero":               return <HeroSection        key={key} product={product} data={section.content} />;
-      case "about":              return <AboutSection       key={key} data={section.content} />;
+      case "about":              return <AboutSection       key={key} data={section.content} product={product} />;
       case "problem":            return <ProblemSection     key={key} data={section.content} />;
       case "benefits":           return <BenefitsSection    key={key} data={section.content} />;
       case "why_choose":         return <WhyChooseSection   key={key} data={section.content} />;
