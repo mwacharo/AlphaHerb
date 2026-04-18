@@ -332,65 +332,6 @@ const STYLES = `
      PACKAGES + ORDER FORM
      ═══════════════════════════════════════════════ */
   .packages-section { background:var(--ink2); }
-  .packages-grid {
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-    gap:16px; margin-top:2rem; margin-bottom:2.5rem;
-  }
-  .package-card {
-    background:var(--ink3); border:2px solid rgba(217,119,6,.15);
-    border-radius:10px; padding:28px 20px; text-align:center;
-    position:relative; transition:border-color .2s, transform .2s, box-shadow .2s;
-    cursor:pointer;
-  }
-  .package-card:hover {
-    border-color:rgba(217,119,6,.5); transform:translateY(-4px);
-    box-shadow:0 12px 40px rgba(217,119,6,.15);
-  }
-  .package-card.active {
-    border-color:var(--gold); transform:translateY(-4px);
-    box-shadow:0 12px 40px rgba(217,119,6,.25);
-    background: #232318;
-  }
-  .package-card.active .package-check {
-    opacity:1; transform:scale(1);
-  }
-  .package-check {
-    position:absolute; top:10px; right:12px;
-    width:22px; height:22px; border-radius:50%;
-    background:var(--gold); display:flex; align-items:center; justify-content:center;
-    font-size:.75rem; color:#fff; font-weight:700;
-    opacity:0; transform:scale(.6); transition:opacity .2s, transform .2s;
-  }
-  .package-badge {
-    position:absolute; top:-12px; left:50%; transform:translateX(-50%);
-    background:linear-gradient(to right, var(--gold-dark), var(--gold-light));
-    color:#ffffff; font-family:var(--ff-condensed); font-size:.72rem;
-    font-weight:800; letter-spacing:.1em; text-transform:uppercase;
-    padding:3px 14px; border-radius:100px;
-  }
-  .package-label {
-    font-family:var(--ff-condensed); font-size:1.15rem; font-weight:700;
-    letter-spacing:.06em; text-transform:uppercase; color:var(--smoke); margin-bottom:8px;
-  }
-  .package-price { font-family:var(--ff-display); font-size:2rem; font-weight:900; color:var(--gold); margin-bottom:4px; }
-  .package-old-price { font-size:.85rem; color:var(--muted); text-decoration:line-through; margin-bottom:4px; }
-  .package-note { font-size:.8rem; color:var(--muted); }
-  .package-saving {
-    display:inline-block; margin-top:10px;
-    background:rgba(39,174,96,.15); border:1px solid rgba(39,174,96,.3);
-    color:var(--green); font-size:.75rem; font-weight:700;
-    font-family:var(--ff-condensed); letter-spacing:.06em;
-    padding:3px 12px; border-radius:100px;
-  }
-
-  /* Package select prompt */
-  .package-select-prompt {
-    text-align:center; padding:14px 20px; margin-bottom:1rem;
-    background:rgba(217,119,6,.08); border:1px dashed rgba(217,119,6,.35);
-    border-radius:8px;
-    font-family:var(--ff-condensed); font-size:.92rem; font-weight:700;
-    letter-spacing:.06em; text-transform:uppercase; color:var(--gold-light);
-  }
 
   /* ── ORDER FORM ── */
   .order-form-wrap {
@@ -434,9 +375,29 @@ const STYLES = `
     box-shadow:0 0 0 3px rgba(217,119,6,.1);
   }
   .form-input.error { border-color:rgba(192,57,43,.6); box-shadow:0 0 0 3px rgba(192,57,43,.1); }
-  /* date input color fix for dark background */
   .form-input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor:pointer; }
   .form-input[type="date"] { color-scheme: dark; }
+
+  /* Package select dropdown */
+  select.form-input {
+    color-scheme: dark;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23d97706' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  select.form-input option {
+    background: #2A2A2E;
+    color: #F5F0E8;
+    padding: 10px;
+  }
+  select.form-input option:disabled {
+    color: #9A9488;
+  }
+
   .form-error { font-size:.76rem; color:#e57373; margin-top:2px; }
   .form-submit-row { margin-top:18px; text-align:center; }
   .form-submit-btn {
@@ -617,10 +578,9 @@ const getTrafficSource = () => {
 /* ════════════════════════════════════════════════════════════════
    ORDER FORM
    ════════════════════════════════════════════════════════════════ */
-const OrderForm = ({ selectedPkg, product, onSuccess }) => {
+const OrderForm = ({ selectedPkg, packages = [], onSelect, product, onSuccess }) => {
   const [name,         setName]         = useState("");
   const [phone,        setPhone]        = useState("");
-  // FIX: consistent casing — setDeliveryDate (capital D)
   const [deliveryDate, setDeliveryDate] = useState("");
   const [whatsapp,     setWhatsapp]     = useState("");
   const [city,         setCity]         = useState("");
@@ -634,11 +594,8 @@ const OrderForm = ({ selectedPkg, product, onSuccess }) => {
   const validate = () => {
     const e = {};
 
-    // Package must be selected (guard in case form is rendered without one)
-    if (!selectedPkg) {
-      e.submit = "Please select a package above before placing your order.";
-      return e;
-    }
+    if (!selectedPkg)
+      e.package = "Please select a package to continue";
 
     if (!name.trim())
       e.name = "Please enter your full name";
@@ -664,186 +621,180 @@ const OrderForm = ({ selectedPkg, product, onSuccess }) => {
     return e;
   };
 
-  
-
-const handleSubmit = async () => {
-  const e = validate();
-  if (Object.keys(e).length) {
-    setErrors(e);
-    if (e.submit) {
-      document.getElementById("order-section")?.scrollIntoView({ behavior: "smooth" });
+  const handleSubmit = async () => {
+    const e = validate();
+    if (Object.keys(e).length) {
+      setErrors(e);
+      return;
     }
-    return;
-  }
-  setErrors({});
-  setLoading(true);
+    setErrors({});
+    setLoading(true);
 
-  const source  = getTrafficSource();
-  const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    const source  = getTrafficSource();
+    const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
-  // ── GTM begin_checkout ─────────────────────────────────────────
-  const ecomItem = {
-    item_id:       String(selectedPkg?.id || ""),
-    item_name:     selectedPkg?.label || "",
-    item_category: product?.name || "",
-    price:         selectedPkg?._rawPrice || 0,
-    quantity:      selectedPkg?._qty || 1,
-  };
-  pushEvent("begin_checkout", {
-    ecommerce: {
-      currency: "KES",
-      value:    selectedPkg?._rawPrice || 0,
-      items:    [ecomItem],
-    },
-  });
-
-  // ── 1. Google Sheets — fire-and-forget ────────────────────────
-  if (SHEETS_WEBHOOK_URL) {
-    const sheetsPayload = {
-      order_id:          orderId,
-      timestamp:         new Date().toISOString(),
-      product_name:      product?.name || "",
-      bundle_label:      selectedPkg?.label || "",
-      bundle_price:      selectedPkg?._rawPrice || 0,
-      bundle_qty:        selectedPkg?._qty || 1,
-      customer_name:     name.trim(),
-      customer_phone:    phone.trim(),
-      customer_whatsapp: whatsapp.trim(),
-      customer_city:     city.trim(),
-      customer_town:     town.trim(),
-      customer_address:  address.trim(),
-      delivery_date:     deliveryDate,
-      utm_source:        source.utm_source,
-      utm_medium:        source.utm_medium,
-      utm_campaign:      source.utm_campaign,
-      landing_url:       source.landing_url,
-      status:            "New",
+    const ecomItem = {
+      item_id:       String(selectedPkg?.id || ""),
+      item_name:     selectedPkg?.label || "",
+      item_category: product?.name || "",
+      price:         selectedPkg?._rawPrice || 0,
+      quantity:      selectedPkg?._qty || 1,
     };
-    const qs = new URLSearchParams(
-      Object.fromEntries(
-        Object.entries(sheetsPayload).map(([k, v]) => [k, String(v)])
-      )
-    ).toString();
-    fetch(`${SHEETS_WEBHOOK_URL}?${qs}`, { method: "GET", mode: "no-cors" })
-      .catch(err => console.warn("Sheets write failed (non-blocking):", err));
-  }
 
-  // ── 2. Backend API — mapped to match Laravel store() ─────────
-  if (API_URL) {
-    try {
-      // Build the order payload to match the Laravel controller structure
-      // Reference: Checkout.jsx orderData format
-      const orderData = {
-        // ── Core order fields ──────────────────────────────────
-        order_no:         orderId,
-        warehouse_id:     1,       // update if you have multiple warehouses
-        status_id:        1,       // 1 = Pending / New
-        total_price:      selectedPkg?._rawPrice || 0,
-        sub_total:        selectedPkg?._rawPrice || 0,
-        amount_paid:      0,
-        shipping_charges: 0,
-        paid:             false,
-        platform:         "web",
-        source:           "sales_page",
+    pushEvent("begin_checkout", {
+      ecommerce: {
+        currency: "KES",
+        value:    selectedPkg?._rawPrice || 0,
+        items:    [ecomItem],
+      },
+    });
 
-        customer_notes: `Bundle: ${selectedPkg?.label || ""} | Delivery: ${deliveryDate}`,
-
-        // ── Customer nested object ─────────────────────────────
-        // Controller does: Customer::firstOrCreate(['phone' => customer.phone], ...)
-        customer: {
-          name:     name.trim(),
-          phone:    phone.trim(),
-          email:    null,
-          address:  address.trim(),
-          city:     city.trim(),
-          region:   town.trim(),
-          zone_id:  null,
-          zipcode:  null,
-        },
-
-        // ── Order items ────────────────────────────────────────
-        // Controller looks up product by SKU: Product::where('sku', item.sku)
-        order_items: [
-          {
-            product_id: product?.id    || null,
-            // sku:        String(selectedPkg?.id || product?.id || ""),
-          sku:        product?.sku || "",
-          name:       selectedPkg?.label || product?.name || "",
-          quantity:   selectedPkg?._qty  || 1,
-          unit_price: selectedPkg?._rawPrice || 0,
-          total_price: selectedPkg?._rawPrice || 0,
-          },
-        ],
-
-        // ── Shipping address ───────────────────────────────────
-        addresses: [
-          {
-            type:      "shipping",
-            full_name: name.trim(),
-            phone:     phone.trim(),
-            email:     null,
-            address:   address.trim(),
-            city:      city.trim(),
-            region:    town.trim(),
-            zipcode:   null,
-          },
-        ],
-
-        // ── UTM / tracking (stored as metadata) ───────────────
-        utm_source:   source.utm_source,
-        utm_medium:   source.utm_medium,
-        utm_campaign: source.utm_campaign,
-        utm_content:  source.utm_content,
-        utm_term:     source.utm_term,
-        ttclid:       source.ttclid,
-        fbclid:       source.fbclid,
-        gclid:        source.gclid,
-        referrer:     source.referrer,
-        landing_url:  source.landing_url,
-
-        // ── WhatsApp + delivery date as notes ─────────────────
-        // These fields don't exist in the standard order schema,
-        // so we fold them into customer_notes and metadata
-        whatsapp:       whatsapp.trim(),
-        delivery_date:  deliveryDate,
+    // ── 1. Google Sheets — fire-and-forget ────────────────────────
+    if (SHEETS_WEBHOOK_URL) {
+      const sheetsPayload = {
+        order_id:          orderId,
+        timestamp:         new Date().toISOString(),
+        product_name:      product?.name || "",
+        bundle_label:      selectedPkg?.label || "",
+        bundle_price:      selectedPkg?._rawPrice || 0,
+        bundle_qty:        selectedPkg?._qty || 1,
+        customer_name:     name.trim(),
+        customer_phone:    phone.trim(),
+        customer_whatsapp: whatsapp.trim(),
+        customer_city:     city.trim(),
+        customer_town:     town.trim(),
+        customer_address:  address.trim(),
+        delivery_date:     deliveryDate,
+        utm_source:        source.utm_source,
+        utm_medium:        source.utm_medium,
+        utm_campaign:      source.utm_campaign,
+        landing_url:       source.landing_url,
+        status:            "New",
       };
-
-      console.log("📦 Sending order data:", orderData);
-
-      // Uses the same createOrder() function from src/api/orders.js
-      // which strips vendor_token and sets the Authorization header
-      const response = await createOrder(orderData);
-      console.log("✅ Order created:", response);
-
-    } catch (apiErr) {
-      // API failure is non-fatal — order is already in Google Sheets
-      console.warn("API write failed (non-blocking):", apiErr.message);
+      const qs = new URLSearchParams(
+        Object.fromEntries(
+          Object.entries(sheetsPayload).map(([k, v]) => [k, String(v)])
+        )
+      ).toString();
+      fetch(`${SHEETS_WEBHOOK_URL}?${qs}`, { method: "GET", mode: "no-cors" })
+        .catch(err => console.warn("Sheets write failed (non-blocking):", err));
     }
-  }
 
-  // ── 3. GTM purchase event ──────────────────────────────────────
-  pushEvent("purchase", {
-    ecommerce: {
-      transaction_id: orderId,
-      currency:       "KES",
-      value:          selectedPkg?._rawPrice || 0,
-      items:          [ecomItem],
-    },
-  });
+    // ── 2. Backend API ─────────────────────────────────────────────
+    if (API_URL) {
+      try {
+        const orderData = {
+          order_no:         orderId,
+          warehouse_id:     1,
+          status_id:        1,
+          total_price:      selectedPkg?._rawPrice || 0,
+          sub_total:        selectedPkg?._rawPrice || 0,
+          amount_paid:      0,
+          shipping_charges: 0,
+          paid:             false,
+          platform:         "web",
+          source:           "sales_page",
+          customer_notes: `Bundle: ${selectedPkg?.label || ""} | Delivery: ${deliveryDate}`,
+          customer: {
+            name:     name.trim(),
+            phone:    phone.trim(),
+            email:    null,
+            address:  address.trim(),
+            city:     city.trim(),
+            region:   town.trim(),
+            zone_id:  null,
+            zipcode:  null,
+          },
+          order_items: [
+            {
+              product_id:  product?.id    || null,
+              sku:         product?.sku   || "",
+              name:        selectedPkg?.label || product?.name || "",
+              quantity:    selectedPkg?._qty  || 1,
+              unit_price:  selectedPkg?._rawPrice || 0,
+              total_price: selectedPkg?._rawPrice || 0,
+            },
+          ],
+          addresses: [
+            {
+              type:      "shipping",
+              full_name: name.trim(),
+              phone:     phone.trim(),
+              email:     null,
+              address:   address.trim(),
+              city:      city.trim(),
+              region:    town.trim(),
+              zipcode:   null,
+            },
+          ],
+          utm_source:   source.utm_source,
+          utm_medium:   source.utm_medium,
+          utm_campaign: source.utm_campaign,
+          utm_content:  source.utm_content,
+          utm_term:     source.utm_term,
+          ttclid:       source.ttclid,
+          fbclid:       source.fbclid,
+          gclid:        source.gclid,
+          referrer:     source.referrer,
+          landing_url:  source.landing_url,
+          whatsapp:       whatsapp.trim(),
+          delivery_date:  deliveryDate,
+        };
 
-  // ── 4. Always show success ─────────────────────────────────────
-  setLoading(false);
-  onSuccess({ name: name.trim(), pkg: selectedPkg, order: { order_id: orderId } });
-};
+        console.log("📦 Sending order data:", orderData);
+        const response = await createOrder(orderData);
+        console.log("✅ Order created:", response);
+
+      } catch (apiErr) {
+        console.warn("API write failed (non-blocking):", apiErr.message);
+      }
+    }
+
+    // ── 3. GTM purchase ────────────────────────────────────────────
+    pushEvent("purchase", {
+      ecommerce: {
+        transaction_id: orderId,
+        currency:       "KES",
+        value:          selectedPkg?._rawPrice || 0,
+        items:          [ecomItem],
+      },
+    });
+
+    setLoading(false);
+    onSuccess({ name: name.trim(), pkg: selectedPkg, order: { order_id: orderId } });
+  };
+
   return (
     <div className="order-form-wrap">
       <div className="order-form-title">📋 Complete Your Order</div>
       <div className="order-form-subtitle">
-        Fill in your details — our team will confirm & arrange free delivery.
+        Fill in your details — our team will confirm &amp; arrange free delivery.
       </div>
 
-      {/* Selected package summary — only shown when a package is chosen */}
-      {selectedPkg ? (
+      {/* ── Package dropdown ── */}
+      <div className="form-row">
+        <label className="form-label">Select Your Package</label>
+        <select
+          className={`form-input${errors.package ? " error" : ""}`}
+          value={selectedPkg ? packages.findIndex(p => p.id === selectedPkg.id) : ""}
+          onChange={e => {
+            const idx = e.target.value;
+            if (idx !== "") onSelect(Number(idx));
+          }}
+        >
+          <option value="" disabled>— Choose a package —</option>
+          {packages.map((pkg, i) => (
+            <option key={pkg.id ?? i} value={i}>
+              {pkg.label}{pkg._qty > 1 ? ` ×${pkg._qty}` : ""} — {pkg.price}
+              {pkg.saving ? `  ✦ ${pkg.saving}` : ""}
+            </option>
+          ))}
+        </select>
+        {errors.package && <span className="form-error">⚠ {errors.package}</span>}
+      </div>
+
+      {/* Confirmation strip — shown once a package is picked */}
+      {selectedPkg && (
         <div className="order-selected-pkg">
           <div className="order-selected-pkg-name">
             ✅ {selectedPkg.label}
@@ -851,13 +802,9 @@ const handleSubmit = async () => {
           </div>
           <div className="order-selected-pkg-price">{selectedPkg.price}</div>
         </div>
-      ) : (
-        <div className="package-select-prompt">
-          ☝ Please select a package above to continue
-        </div>
       )}
 
-      {/* Expected delivery date — FIX: onChange calls setDeliveryDate (capital D) */}
+      {/* Expected delivery date */}
       <div className="form-row">
         <label className="form-label">Expected Delivery Date</label>
         <input
@@ -954,17 +901,6 @@ const handleSubmit = async () => {
         {errors.address && <span className="form-error">⚠ {errors.address}</span>}
       </div>
 
-      {/* Server / misc error */}
-      {errors.submit && (
-        <div style={{
-          background: "rgba(192,57,43,.1)", border: "1px solid rgba(192,57,43,.3)",
-          borderRadius: 6, padding: "12px 14px", marginBottom: 12,
-          fontSize: ".85rem", color: "#e57373",
-        }}>
-          ⚠ {errors.submit}
-        </div>
-      )}
-
       <div className="form-submit-row">
         <button
           className="form-submit-btn anim-pulse"
@@ -1017,17 +953,11 @@ const HeroSection = ({ product, data }) => {
 
   return (
     <section className="hero">
-
-
-      {/* whatsapp button  */}
-
-      {/* contact us  */}
-
       <FloatingWhatsApp
-       phoneNumber="254110771426"
-                accountName="AlphaHerb"
-                chatMessage="Hello 👋 How can we help you today?"
-                statusMessage="Typically replies within 3 minutes "
+        phoneNumber="254110771426"
+        accountName="AlphaHerb"
+        chatMessage="Hello 👋 How can we help you today?"
+        statusMessage="Typically replies within 3 minutes"
       />
 
       <div className="hero-inner">
@@ -1204,7 +1134,6 @@ const ReviewsSection = ({ reviews }) => {
    PACKAGES + ORDER FORM (combined)
    ══════════════════════════════════════════════════════════════ */
 const PackagesSection = ({ data, bundles, offers, product }) => {
-  // FIX: start as null — no package pre-selected
   const [selected,    setSelected]    = useState(null);
   const [orderDone,   setOrderDone]   = useState(false);
   const [successInfo, setSuccessInfo] = useState(null);
@@ -1240,7 +1169,6 @@ const PackagesSection = ({ data, bundles, offers, product }) => {
 
   const packages = buildPackages();
 
-  // Fire view_item when packages section mounts
   useEffect(() => {
     if (packages.length) {
       pushEvent("view_item", {
@@ -1279,7 +1207,6 @@ const PackagesSection = ({ data, bundles, offers, product }) => {
     });
   };
 
-  // selectedPkg is null when nothing is chosen — OrderForm handles this gracefully
   const selectedPkg = selected !== null ? packages[selected] : null;
 
   if (orderDone && successInfo) {
@@ -1297,36 +1224,11 @@ const PackagesSection = ({ data, bundles, offers, product }) => {
       <div className="section-inner">
         <h2 className="section-title">Take Back <span className="gold-text">Control Today</span></h2>
         <div className="gold-divider" />
-        <p style={{ textAlign: "center", color: "var(--muted)", marginTop: ".5rem", fontSize: ".88rem" }}>
-          Select your package below ↓
-        </p>
 
-        {/* Package cards */}
-        <div className="packages-grid">
-          {packages.map((pkg, i) => (
-            <div
-              key={i}
-              className={`package-card ${selected === i ? "active" : ""}`}
-              onClick={() => handleSelect(i)}
-              role="button"
-              aria-pressed={selected === i}
-              tabIndex={0}
-              onKeyDown={e => (e.key === "Enter" || e.key === " ") && handleSelect(i)}
-            >
-              <div className="package-check">✓</div>
-              {pkg.badge && <div className="package-badge">{pkg.badge}</div>}
-              <div className="package-label">{pkg.label}</div>
-              {pkg.oldPrice && <div className="package-old-price">{pkg.oldPrice}</div>}
-              <div className="package-price">{pkg.price}</div>
-              {pkg.note && <div className="package-note">{pkg.note}</div>}
-              {pkg.saving && <div className="package-saving">{pkg.saving}</div>}
-            </div>
-          ))}
-        </div>
-
-        {/* Order form — always rendered; shows prompt inside when no pkg selected */}
         <OrderForm
           selectedPkg={selectedPkg}
+          packages={packages}
+          onSelect={handleSelect}
           product={product}
           onSuccess={(info) => {
             setSuccessInfo(info);
