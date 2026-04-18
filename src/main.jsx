@@ -12,6 +12,7 @@ import Checkout from "./pages/Checkout.jsx";
 import CartPage from './pages/CartPage.jsx';
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
 import TermsConditions from './pages/TermsConditions.jsx';
+import SalesPage from './pages/SalesPage.jsx';
 
 // 
 // import ReactPixel from 'react-facebook-pixel'
@@ -55,6 +56,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/cart" element={<CartPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-conditions" element={<TermsConditions />} />
+        <Route path="/product/:slug" element={<SalesPage />} />
       </Routes>
     </BrowserRouter>
         </CartProvider>

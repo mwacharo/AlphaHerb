@@ -288,11 +288,7 @@ const ProductsPage = () => {
 
                 <div className="grid md:grid-cols-3 gap-8">
                     {products.map((product) => {
-                        // Get image if available
-                        // const imageUrl = product.images?.[0]?.image_path
-                        //     ? `${import.meta.env.VITE_APP_URL || ""}${product.images[0].image_path}`
-                        //     : "https://via.placeholder.com/150x150?text=No+Image";
-
+           
                         const BASE_URL = import.meta.env.VITE_ASSETS_BASE_URL;
 
 
@@ -311,26 +307,23 @@ const ProductsPage = () => {
                                 key={product.id}
                                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow"
                             >
-                                {/* <div className="h-48 flex items-center justify-center bg-gray-100">
-                                    <img
-                                        src={imageUrl}
-                                        alt={product.product_name}
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div> */}
+                     
 
 
 
                                 <div className="relative aspect-square bg-white p-10 flex items-center justify-center overflow-hidden">
   
   <div className="absolute inset-0 bg-gradient-radial from-gray-100 via-white to-white opacity-70"></div>
-
+<div
+  onClick={() => navigate(`/product/${product.slug || product.id}`)}
+  className="cursor-pointer"
+>
   <img
     src={imageUrl}
     alt={product.product_name}
-    loading="lazy"
-    className="relative max-h-full object-contain transition-all duration-700 group-hover:scale-105"
+    className="relative max-h-full object-contain"
   />
+</div>
 
 </div>
 
