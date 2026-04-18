@@ -1023,7 +1023,7 @@ const ProofBar = () => (
 const AboutSection = ({ data }) => (
   <section className="section about">
     <div className="section-inner">
-      <h2 className="section-title">What Is <span className="gold-text">Strong Man Syrup?</span></h2>
+      <h2 className="section-title">What Is <span className="gold-text">{product.name}</span></h2>
       <div className="gold-divider" />
       <p className="about-body">{data?.body}</p>
     </div>
