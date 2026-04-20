@@ -696,7 +696,7 @@ const OrderForm = ({ selectedPkg, packages = [], onSelect, product, onSuccess })
           source:           "sales_page",
           customer_notes: `Bundle: ${selectedPkg?.label || ""} | Delivery: ${deliveryDate}`,
           customer: {
-            name:     name.trim(),
+          full_name:     name.trim(),
             phone:    phone.trim(),
             email:    null,
             address:  address.trim(),
@@ -744,6 +744,12 @@ const OrderForm = ({ selectedPkg, packages = [], onSelect, product, onSuccess })
         console.log("📦 Sending order data:", orderData);
         const response = await createOrder(orderData);
         console.log("✅ Order created:", response);
+
+
+           // ✅ 🔥 META PIXEL LEAD EVENT (ONLY AFTER SUCCESS)
+      if (response && window.fbq) {
+        window.fbq('track', 'Lead');
+      }
 
       } catch (apiErr) {
         console.warn("API write failed (non-blocking):", apiErr.message);
