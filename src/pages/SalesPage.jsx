@@ -649,6 +649,16 @@ const OrderForm = ({ selectedPkg, packages = [], onSelect, product, onSuccess })
       },
     });
 
+
+
+    if (window.fbq) {
+  window.fbq('track', 'InitiateCheckout', {
+    value: selectedPkg?._rawPrice || 0,
+    currency: 'KES',
+    content_name: product?.name || '',
+  });
+}
+
     // ── 1. Google Sheets — fire-and-forget ────────────────────────
     if (SHEETS_WEBHOOK_URL) {
       const sheetsPayload = {
@@ -747,9 +757,20 @@ const OrderForm = ({ selectedPkg, packages = [], onSelect, product, onSuccess })
 
 
            // ✅ 🔥 META PIXEL LEAD EVENT (ONLY AFTER SUCCESS)
+      // if (response && window.fbq) {
+      //   window.fbq('track', 'Lead');
+      // }
+
+
       if (response && window.fbq) {
-        window.fbq('track', 'Lead');
-      }
+  window.fbq('track', 'Lead', {
+    value: selectedPkg?._rawPrice || 0,
+    currency: 'KES',
+    content_name: product?.name || '',
+  }, {
+    eventID: orderId
+  });
+}
 
        // TikTok
   if (window.ttq) {
