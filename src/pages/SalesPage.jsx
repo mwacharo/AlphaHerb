@@ -1237,6 +1237,15 @@ const PackagesSection = ({ data, bundles, offers, product }) => {
         }],
       },
     });
+
+
+    if (window.fbq) {
+    window.fbq('track', 'InitiateCheckout', {
+      value: pkg?._rawPrice || 0,
+      currency: 'KES',
+      content_name: product?.name || '',
+    });
+  }
   };
 
   const selectedPkg = selected !== null ? packages[selected] : null;
