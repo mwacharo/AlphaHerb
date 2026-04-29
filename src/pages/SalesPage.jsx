@@ -1223,6 +1223,9 @@ const PackagesSection = ({ data, bundles, offers, product }) => {
 
   const handleSelect = (idx) => {
     setSelected(idx);
+
+      const pkg = packages[idx]; // ✅ FIX
+
     pushEvent("select_item", {
       ecommerce: {
         currency: "KES",
